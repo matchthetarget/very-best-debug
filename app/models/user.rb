@@ -9,7 +9,11 @@
 #
 
 class User < ApplicationRecord
-  
+  validates(:username, {
+    :presence => true,
+    :uniqueness => { :case_sensitive => false },
+  })
+
   def comments
     my_id = self.id
     matching_comments = Comment.where({ :author_id => my_id })

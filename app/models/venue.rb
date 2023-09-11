@@ -11,6 +11,10 @@
 #
 
 class Venue < ApplicationRecord
+  validates(:name, {
+    :presence => true,
+    :uniqueness => { :case_sensitive => false },
+  })
 
   def comments
     my_id = self.id
