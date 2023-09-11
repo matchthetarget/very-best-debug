@@ -18,9 +18,12 @@ class UsersController < ApplicationController
   def create
     @user = User.new
     @user.username = params.fetch("query_username")
-    @user.save
     
-    redirect_to("/users/#{@user.username}")
+    if @user.save
+      redirect_to("/users/#{@user.username}")
+    else
+      redirect_to("/users")
+    end
   end
   
   def update
