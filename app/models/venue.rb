@@ -2,7 +2,7 @@
 #
 # Table name: venues
 #
-#  id           :bigint           not null, primary key
+#  id           :integer          not null, primary key
 #  address      :string
 #  name         :string
 #  neighborhood :string
