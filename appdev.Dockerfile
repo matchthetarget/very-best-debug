@@ -84,12 +84,9 @@ COPY --chown=student:student Gemfile.lock /rails-template/Gemfile.lock
 RUN /bin/bash -l -c "bundle install"
 
 # Install Google Chrome
-RUN sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | \
-    tee -a /etc/apt/sources.list.d/google.list' && \
-    wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | \
-    sudo apt-key add - && \
-    sudo apt-get update && \
-    sudo apt-get install -y google-chrome-stable libxss1
+RUN sudo apt-get update && sudo apt-get install -y libxss1
+RUN wget https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.198-1_amd64.deb && \
+    sudo apt-get install -y ./google-chrome-stable_114.0.5735.198-1_amd64.deb
 
 # Install Chromedriver (compatable with Google Chrome version)
 #   See https://gerg.dev/2021/06/making-chromedriver-and-chrome-versions-match-in-a-docker-image/
@@ -122,7 +119,7 @@ RUN mkdir -p $PGDATA ~/.pg_ctl/bin ~/.pg_ctl/sockets \
  && sudo setfacl -dR -m g:staff:rwx $PGDATA \
  && sudo chmod 777 /var/run/postgresql
 ENV PATH="$PATH:$HOME/.pg_ctl/bin"
-ENV DATABASE_URL="postgresql://student@localhost"
+# ENV DATABASE_URL="postgresql://student@localhost"
 ENV PGHOSTADDR="127.0.0.1"
 ENV PGDATABASE="postgres"
 
@@ -186,7 +183,8 @@ RUN git config --global push.default upstream \
     && git config --global alias.sla 'log --oneline --decorate --graph --all' \
     && git config --global alias.co 'checkout' \
     && git config --global alias.cob 'checkout -b' \
-    && git config --global --add --bool push.autoSetupRemote true
+    && git config --global --add --bool push.autoSetupRemote true \
+    && git config --global core.editor "code --wait"
 
 # Alias 'git' to 'g'
 # RUN echo 'export PATH="$PATH:$GITPOD_REPO_ROOT/bin"' >> ~/.bashrc
@@ -205,3 +203,6 @@ __git_complete g __git_main" >> ~/.bash_aliases
 # Alias bundle exec to be
 RUN echo "alias be='bundle exec'" >> ~/.bash_aliases
 # RUN sudo cp -r /home/student /home/gitpod && sudo chmod 777 /home/gitpod
+
+# Add bin/rake to path for non-Rails projects
+RUN echo 'export PATH="$PWD/bin:$PATH"' >> ~/.bashrc

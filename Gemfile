@@ -107,6 +107,3 @@ group :test do
   gem "rspec-html-matchers"
   gem "webmock"
 end
-
-# cron job for sample_data with whenever
-gem "whenever", require: false
